@@ -1,4 +1,4 @@
-const {nextui} = require("@nextui-org/react");
+const { nextui } = require('@nextui-org/react');
 
 module.exports = {
   content: [
@@ -7,6 +7,6 @@ module.exports = {
   ],
   theme: {},
   variants: {},
-  darkMode: "class",
+  darkMode: 'class',
   plugins: [nextui()],
 };
