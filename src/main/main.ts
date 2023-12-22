@@ -11,36 +11,35 @@
 import fs from 'fs';
 import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { DownloaderHelper } from 'node-downloader-helper';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { DownloaderHelper } from 'node-downloader-helper';
 
 let mainWindow: BrowserWindow | null = null;
 
 // home directory with create download folder
-const dir = require('os').homedir();;
+const dir = require('os').homedir();
 
-if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir + '/Downloads');
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(`${dir}/Downloads`);
 }
 
 // send message
 ipcMain.on('message', async (event, arg) => {
-  console.log(arg)
-  event.reply('message', 'hi from electron')
-})
+  console.log(arg);
+  event.reply('message', 'hi from electron');
+});
 
 // download files from url
 ipcMain.on('download', (event, data: any) => {
-  const dl = new DownloaderHelper(data[0], dir + '/Downloads', data[1]);
+  const dl = new DownloaderHelper(data[0], `${dir}/Downloads`, data[1]);
 
   dl.on('start', () => event.reply('downloading', true));
   dl.on('end', () => event.reply('downloading', false));
   dl.on('end', () => event.reply('message', 'Download Complete!'));
   dl.on('error', () => event.reply('message', 'Download Failed!'));
-  dl.start().catch(err => event.reply('message', err));
-})
-
+  dl.start().catch((err) => event.reply('message', err));
+});
 
 /// DO NOT EDIT HERE
 if (process.env.NODE_ENV === 'production') {
