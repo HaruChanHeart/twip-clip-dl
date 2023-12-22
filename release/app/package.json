@@ -1,0 +1,18 @@
+{
+  "name": "twip-clip-dl",
+  "version": "1.0.0",
+  "description": "TWIP Clip Downloader",
+  "license": "MIT",
+  "author": {
+    "name": "HaruChanHeart",
+    "email": "haruchan0111@naver.com",
+    "url": "https://github.com/haruchanheart"
+  },
+  "main": "./dist/main/main.js",
+  "scripts": {
+    "rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
+    "postinstall": "npm run rebuild && npm run link-modules",
+    "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
+  },
+  "dependencies": {}
+}
