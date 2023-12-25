@@ -20,6 +20,10 @@ let mainWindow: BrowserWindow | null = null;
 // home directory with create download folder
 const dir = require('os').homedir();
 
+function filenamify(fn: string) {
+  return fn.replaceAll(/[<>:"/\\|?*]/g, '-');
+}
+
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(`${dir}/Downloads`);
 }
@@ -31,14 +35,17 @@ ipcMain.on('message', async (event, arg) => {
 });
 
 // download files from url
-ipcMain.on('download', (event, data: any) => {
-  const dl = new DownloaderHelper(data[0], `${dir}/Downloads`, data[1]);
+ipcMain.on('download', async (event, data: any) => {
+  const convertName = filenamify(data[1].fileName);
+  const dl = new DownloaderHelper(data[0], `${dir}/Downloads`, {
+    fileName: convertName,
+  });
 
-  dl.on('start', () => event.reply('downloading', true));
-  dl.on('end', () => event.reply('downloading', false));
-  dl.on('end', () => event.reply('message', 'Download Complete!'));
-  dl.on('error', () => event.reply('message', 'Download Failed!'));
-  dl.start().catch((err) => event.reply('message', err));
+  await dl.on('start', () => event.reply('downloading', true));
+  await dl.on('end', () => event.reply('downloading', false));
+  await dl.on('end', () => event.reply('message', 'Download Complete!'));
+  await dl.on('error', () => event.reply('message', 'Download Failed!'));
+  await dl.start().catch((err) => event.reply('message', err));
 });
 
 /// DO NOT EDIT HERE

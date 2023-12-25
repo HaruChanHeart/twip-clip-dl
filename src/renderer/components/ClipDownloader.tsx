@@ -58,6 +58,7 @@ export default function ClipDownloader() {
   }, []);
 
   const fetchList = (userId: number) => {
+    setSelectedList(new Set());
     fetch(`https://vod-api.twip.kr/clip/user/${userId}`, {
       cache: 'reload',
     })
@@ -163,8 +164,9 @@ export default function ClipDownloader() {
         </TableHeader>
         <TableBody emptyContent="No clip datas found">
           {downloadList
-            ? downloadList.map((value: IList) => (
-                <TableRow key={value.cfVideoId}>
+            ? downloadList.map((value: IList, index: number) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <TableRow key={index}>
                   <TableCell>
                     <div className="flex flex-row items-center justify-star gap-5">
                       <Image
